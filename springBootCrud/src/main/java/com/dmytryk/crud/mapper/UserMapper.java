@@ -3,6 +3,8 @@ package com.dmytryk.crud.mapper;
 import com.dmytryk.crud.dto.UserDto;
 import com.dmytryk.crud.entry.Gender;
 import com.dmytryk.crud.entry.User;
+import com.dmytryk.crud.exception.UserGenderNotMatchEnum;
+import com.dmytryk.crud.exception.UserPasswordNotMatchException;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
@@ -12,6 +14,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public abstract class UserMapper {
@@ -19,8 +22,8 @@ public abstract class UserMapper {
 
     @BeforeMapping
     void checkPassword(UserDto userDto) {
-        if (StringUtils.equals(userDto.getPassword(), userDto.getRepeatPassword())) {
-            throw new RuntimeException("Please make sure your passwords match.");
+        if (!StringUtils.equals(userDto.getPassword(), userDto.getRepeatPassword())) {
+            throw new UserPasswordNotMatchException("Please make sure your passwords match.");
         }
     }
 
@@ -40,12 +43,7 @@ public abstract class UserMapper {
                 return genderVal;
             }
         }
-        throw new RuntimeException("There are no matching of Enum GENDER.");
-    }
-
-    @Named("passwordToDto")
-    public String passwordToDto(User user) {
-        return user.getPassword();
+        throw new UserGenderNotMatchEnum("There are no matching of Enum GENDER.");
     }
 
     @Named("getGenderForUser")
@@ -55,7 +53,5 @@ public abstract class UserMapper {
     }
 
     public abstract List<UserDto> listToUserDto(Collection<User> users);
-
-
 }
 

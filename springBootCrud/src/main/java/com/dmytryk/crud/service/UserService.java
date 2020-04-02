@@ -14,5 +14,5 @@ public interface UserService {
 
     UserDto updateUser(UserDto userDto);
 
-    void getUserById(String id);
+    UserDto getUserById(String id);
 }
