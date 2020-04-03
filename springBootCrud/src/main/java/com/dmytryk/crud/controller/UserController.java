@@ -9,6 +9,7 @@ import com.dmytryk.crud.validators.PasswordValidator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -35,8 +36,9 @@ public class UserController {
 
     @ApiOperation(value = "Returns list of all users")
     @GetMapping
-    public Collection<UserDto> getUser() {
-        return userServiceImpl.getUser();
+    public CollectionModel<UserDtoModel> getUser() {
+        Collection<UserDto> userDtoList = userServiceImpl.getUser();
+        return userModelAssembler.toCollectionModel(userDtoList);
     }
 
     @ApiOperation(value = "Returns a specific user by user Id")

@@ -3,6 +3,7 @@ package com.dmytryk.crud.controller.assembler;
 import com.dmytryk.crud.controller.UserController;
 import com.dmytryk.crud.controller.model.UserDtoModel;
 import com.dmytryk.crud.dto.UserDto;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -23,5 +24,11 @@ public class UserModelAssembler extends RepresentationModelAssemblerSupport<User
         resource.add(linkTo(methodOn(UserController.class).getUserById(userDto.getUserId())).withSelfRel());
         resource.add(linkTo(methodOn(UserController.class).postUser(null, null)).withRel("post_url"));
         return resource;
+    }
+
+    @Override
+    public CollectionModel<UserDtoModel> toCollectionModel(Iterable<? extends UserDto> entities) {
+        CollectionModel<UserDtoModel> userDtoModels = super.toCollectionModel(entities);
+        return userDtoModels;
     }
 }
