@@ -1,18 +1,17 @@
 package com.dmytryk.crud.service;
 
 import com.dmytryk.crud.dto.UserDto;
-
-import java.util.Collection;
+import java.util.List;
 
 public interface UserService {
 
-    Collection<UserDto> getUser();
+  List<UserDto> getUsers();
 
-    UserDto postUser(UserDto userDto);
+  UserDto postUser(UserDto userDto);
 
-    void deleteUser(String id);
+  void deleteUser(String id);
 
-    UserDto updateUser(UserDto userDto);
+  UserDto updateUser(UserDto userDto);
 
-    UserDto getUserById(String id);
+  UserDto getUserById(String id);
 }

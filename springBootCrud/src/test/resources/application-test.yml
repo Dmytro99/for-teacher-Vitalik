@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      database: UserDB
+      host: localhost
+      port: 0
+  jackson:
+    default-property-inclusion: NON_NULL

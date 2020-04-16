@@ -3,72 +3,66 @@ package com.dmytryk.crud.controller;
 import com.dmytryk.crud.controller.assembler.UserModelAssembler;
 import com.dmytryk.crud.controller.model.UserDtoModel;
 import com.dmytryk.crud.dto.UserDto;
-import com.dmytryk.crud.service.impl.UserServiceImpl;
+import com.dmytryk.crud.service.UserService;
 import com.dmytryk.crud.validators.EmailValidator;
 import com.dmytryk.crud.validators.PasswordValidator;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 import javax.validation.Valid;
-import java.util.Collection;
+import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
-@Api(tags = "User Controller")
-public class UserController {
-    private final UserServiceImpl userServiceImpl;
-    private final EmailValidator emailValidator;
-    private final PasswordValidator passwordValidator;
-    private final UserModelAssembler userModelAssembler;
+public class UserController extends AbstractUserController {
 
-    @InitBinder
-    public void dataBinding(WebDataBinder binder) {
-        binder.addValidators(emailValidator, passwordValidator);
-    }
+  private final UserService userService;
+  private final EmailValidator emailValidator;
+  private final PasswordValidator passwordValidator;
+  private final UserModelAssembler userModelAssembler;
 
-    @ApiOperation(value = "Returns list of all users")
-    @GetMapping
-    public CollectionModel<UserDtoModel> getUser() {
-        Collection<UserDto> userDtoList = userServiceImpl.getUser();
-        return userModelAssembler.toCollectionModel(userDtoList);
-    }
+  @Override
+  public void dataBinding(WebDataBinder binder) {
+    binder.addValidators(emailValidator, passwordValidator);
+  }
 
-    @ApiOperation(value = "Returns a specific user by user Id")
-    @GetMapping(value = "/{id}")
-    public UserDtoModel getUserById(@PathVariable("id") String id) {
-        UserDto getById = userServiceImpl.getUserById(id);
-        return userModelAssembler.toModel(getById);
-    }
+  @Override
+  public Resources<UserDtoModel> getUsers() {
+    List<UserDto> userDtoList = userService.getUsers();
+    return userModelAssembler.toResources(userDtoList);
+  }
 
-    @ApiOperation(value = "Add new user to the list of users")
-    @PostMapping
-    public UserDtoModel postUser(@Valid @RequestBody UserDto userDto, BindingResult bindingResult) {
-        UserDto post = userServiceImpl.postUser(userDto);
-        if (bindingResult.hasErrors()) {
-            throw new RuntimeException("Error connected with binding");
-//                                                                                TODO: WHAT I NEED TO RETURN????????
-        }
-        return userModelAssembler.toModel(post);
-    }
+  @Override
+  public UserDtoModel getUserById(@PathVariable("id") String id) {
+    UserDto getById = userService.getUserById(id);
+    return userModelAssembler.toResource(getById);
+  }
 
-    @ApiOperation(value = "Delete a user from the list by user Id")
-    @DeleteMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable("id") String id) {
-        userServiceImpl.deleteUser(id);
-    }
+  @Override
+  public ResponseEntity<UserDtoModel> postUser(@RequestBody @Valid UserDto userDto) {
+    UserDto post = userService.postUser(userDto);
+    UserDtoModel userDtoModel = userModelAssembler.toResource(post);
+    return new ResponseEntity<>(userDtoModel, HttpStatus.CREATED);
+  }
 
-    @ApiOperation(value = "Update specific user from the list of all users")
-    @PutMapping
-    public UserDto updateUser(@RequestBody UserDto userDto) {
-        return userServiceImpl.updateUser(userDto);
-    }
+  @Override
+  public ResponseEntity<?> deleteUser(@PathVariable("id") String id) {
+    userService.deleteUser(id);
+    return new ResponseEntity<>("User is successfully deleted", HttpStatus.NO_CONTENT);
+  }
+
+  @Override
+  public ResponseEntity<UserDto> updateUser(@PathVariable("id") String id,
+      @RequestBody @Valid UserDto userDto) {
+    UserDto updateUser = userService.updateUser(userDto);
+    return new ResponseEntity<>(updateUser, HttpStatus.OK);
+  }
 }

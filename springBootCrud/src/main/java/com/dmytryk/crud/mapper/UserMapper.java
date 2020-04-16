@@ -3,7 +3,7 @@ package com.dmytryk.crud.mapper;
 import com.dmytryk.crud.dto.UserDto;
 import com.dmytryk.crud.entry.Gender;
 import com.dmytryk.crud.entry.User;
-import com.dmytryk.crud.exception.UserGenderNotMatchEnum;
+import com.dmytryk.crud.exception.UserGenderNotMatchEnumException;
 import com.dmytryk.crud.exception.UserPasswordNotMatchException;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.BeforeMapping;
@@ -14,7 +14,6 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Mapper
 public abstract class UserMapper {
@@ -43,7 +42,7 @@ public abstract class UserMapper {
                 return genderVal;
             }
         }
-        throw new UserGenderNotMatchEnum("There are no matching of Enum GENDER.");
+        throw new UserGenderNotMatchEnumException("There are no matching of Enum GENDER.");
     }
 
     @Named("getGenderForUser")

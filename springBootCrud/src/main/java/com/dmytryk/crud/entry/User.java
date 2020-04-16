@@ -1,22 +1,27 @@
 package com.dmytryk.crud.entry;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@Builder
 @Document
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-    @Id
-    private String userId;
-    private String password;
-    private int age;
-    @Indexed(unique = true)
-    private String email;
-    private Gender gender;
+
+  @Id
+  private String userId;
+  private String password;
+  private int age;
+  @Indexed(unique = true)
+  private String email;
+  private Gender gender;
 
 }

@@ -7,15 +7,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.ResourceSupport;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ApiModel
-public class UserDtoModel extends RepresentationModel<UserDtoModel> {
+public class UserDtoModel extends ResourceSupport {
 
-    @JsonUnwrapped
-    private UserDto userDto;
+  @JsonUnwrapped
+  private UserDto userDto;
 }
