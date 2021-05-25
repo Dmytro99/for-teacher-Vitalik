@@ -19,7 +19,6 @@ public class UserModelAssembler extends ResourceAssemblerSupport<UserDto, UserDt
     super(UserController.class, UserDtoModel.class);
   }
 
-
   @Override
   public UserDtoModel toResource(UserDto userDto) {
     UserDtoModel resource = new UserDtoModel();
