@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.dmytryk.crud.controller.assembler.UserModelAssembler;
-import com.dmytryk.crud.controller.model.UserDtoModel;
+import com.dmytryk.crud.controller.model.UserModel;
 import com.dmytryk.crud.dto.UserDto;
 import com.dmytryk.crud.entry.Gender;
 import com.dmytryk.crud.entry.User;
@@ -62,7 +62,7 @@ public class UserControllerTest {
   @Autowired
   private WebApplicationContext webApplicationContext;
 
-  private UserDtoModel userDtoModel;
+  private UserModel userModel;
   private List<UserDto> userList;
   private User user;
   private UserDto userDto;
@@ -109,8 +109,8 @@ public class UserControllerTest {
         .gender("MALE")
         .build();
 
-    userDtoModel = new UserDtoModel();
-    userDtoModel.setUserDto(userDto);
+    userModel = new UserModel();
+    userModel.setUserDto(userDto);
 
   }
 
@@ -118,7 +118,7 @@ public class UserControllerTest {
   public void getUsers() throws Exception {
     when(userService.getUsers()).thenReturn(userList);
     when(userModelAssembler.toResources(anyList())).thenReturn(new Resources<>(
-        Collections.singletonList(userDtoModel)));
+        Collections.singletonList(userModel)));
 
     mockMvc.perform(get("/user")
         .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -130,7 +130,7 @@ public class UserControllerTest {
   @Test
   public void getUserById() throws Exception {
     when(userService.getUserById(user.getUserId())).thenReturn(userDto);
-    when(userModelAssembler.toResource(userDto)).thenReturn(userDtoModel);
+    when(userModelAssembler.toResource(userDto)).thenReturn(userModel);
 
     mockMvc.perform(get("/user/33")
         .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -141,7 +141,7 @@ public class UserControllerTest {
   @Test
   public void postUser() throws Exception {
     when(userService.postUser(any(UserDto.class))).thenReturn(userDto);
-    when(userModelAssembler.toResource(userDto)).thenReturn(userDtoModel);
+    when(userModelAssembler.toResource(userDto)).thenReturn(userModel);
 
     String jsonString = new ObjectMapper().writeValueAsString(userDto);
 

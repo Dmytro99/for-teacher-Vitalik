@@ -14,7 +14,7 @@ import org.springframework.hateoas.ResourceSupport;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ApiModel
-public class UserDtoModel extends ResourceSupport {
+public class UserModel extends ResourceSupport {
 
   @JsonUnwrapped
   private UserDto userDto;

@@ -6,3 +6,9 @@ spring:
             port: 27017
     jackson:
         default-property-inclusion: NON_NULL
+
+app:
+    auth:
+        user:
+            password: password
+            email: user@mail.com

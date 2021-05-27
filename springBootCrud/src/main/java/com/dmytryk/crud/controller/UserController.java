@@ -1,7 +1,8 @@
 package com.dmytryk.crud.controller;
 
+import com.dmytryk.crud.api.UserApi;
 import com.dmytryk.crud.controller.assembler.UserModelAssembler;
-import com.dmytryk.crud.controller.model.UserDtoModel;
+import com.dmytryk.crud.controller.model.UserModel;
 import com.dmytryk.crud.dto.UserDto;
 import com.dmytryk.crud.service.UserService;
 import com.dmytryk.crud.validators.EmailValidator;
@@ -13,17 +14,13 @@ import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
-public class UserController extends AbstractUserController {
+public class UserController implements UserApi {
 
   private final UserService userService;
   private final EmailValidator emailValidator;
@@ -36,22 +33,22 @@ public class UserController extends AbstractUserController {
   }
 
   @Override
-  public Resources<UserDtoModel> getUsers() {
+  public Resources<UserModel> getUsers() {
     List<UserDto> userDtoList = userService.getUsers();
     return userModelAssembler.toResources(userDtoList);
   }
 
   @Override
-  public UserDtoModel getUserById(@PathVariable("id") String id) {
+  public UserModel getUserById(@PathVariable("id") String id) {
     UserDto getById = userService.getUserById(id);
     return userModelAssembler.toResource(getById);
   }
 
   @Override
-  public ResponseEntity<UserDtoModel> postUser(@RequestBody @Valid UserDto userDto) {
+  public ResponseEntity<UserModel> postUser(@RequestBody @Valid UserDto userDto) {
     UserDto post = userService.postUser(userDto);
-    UserDtoModel userDtoModel = userModelAssembler.toResource(post);
-    return new ResponseEntity<>(userDtoModel, HttpStatus.CREATED);
+    UserModel userModel = userModelAssembler.toResource(post);
+    return new ResponseEntity<>(userModel, HttpStatus.CREATED);
   }
 
   @Override
