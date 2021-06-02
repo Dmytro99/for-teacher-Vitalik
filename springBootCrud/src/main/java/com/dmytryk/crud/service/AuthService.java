@@ -11,4 +11,6 @@ public interface AuthService extends UserDetailsService {
 
   void signOut();
 
+  void sendRegistrationSuccessMail(String email);
+
 }

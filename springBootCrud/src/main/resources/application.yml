@@ -12,3 +12,8 @@ app:
         user:
             password: password
             email: user@mail.com
+
+
+register:
+    success:
+        url: http://localhost:9091/email

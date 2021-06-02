@@ -46,16 +46,6 @@ public class CustomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAda
         .csrf()
         .disable()
         .httpBasic();
-
-//        authorizeRequests()
-//        .anyRequest()
-//        .authenticated()
-//        .and()
-//        .cors().disable()
-//        .csrf().disable()
-//        .httpBasic()
-//        .and()
-//        .sessionManagement().disable();
   }
 
   @Bean

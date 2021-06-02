@@ -24,7 +24,7 @@ public class CrudApplication {
       userDto.setEmail(email);
       userDto.setPassword(password);
       userDto.setRepeatPassword(password);
-      authService.signUp(userDto);
+      authService.signIn(userDto);
     };
   }
 }

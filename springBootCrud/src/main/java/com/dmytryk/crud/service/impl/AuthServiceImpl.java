@@ -8,6 +8,7 @@ import com.dmytryk.crud.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,18 +17,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
 
   private static final UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+
   @Autowired
   private AuthenticationManager authenticationManager;
   @Autowired
   private PasswordEncoder passwordEncoder;
   @Autowired
   private UserRepository userRepository;
+  @Autowired
+  private RestTemplate restTemplate;
+
+  @Value("${register.success.url}")
+  private String url;
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -56,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     user = userRepository.save(user);
     log.info("Used with id {} successfully registered", user.getUserId());
-
+    sendRegistrationSuccessMail(user.getEmail());
     return signIn(userDto);
   }
 
@@ -65,5 +73,10 @@ public class AuthServiceImpl implements AuthService {
     User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     log.info("Sign out user with email: {}", user.getEmail());
     SecurityContextHolder.clearContext();
+  }
+
+  @Override
+  public void sendRegistrationSuccessMail(String email) {
+    restTemplate.getForEntity(url + email, String.class);
   }
 }
